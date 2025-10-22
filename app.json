@@ -1,0 +1,51 @@
+{
+  "expo": {
+    "name": "BestDeal",
+    "slug": "bestdeal",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
+    "scheme": "bestdeal",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0A0A0F"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.bestdeal.app",
+      "infoPlist": {
+        "NSCameraUsageDescription": "BestDeal needs camera access to search products by image",
+        "NSPhotoLibraryUsageDescription": "BestDeal needs photo library access to search products by image"
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0A0A0F"
+      },
+      "package": "com.bestdeal.app",
+      "permissions": [
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ],
+      "edgeToEdgeEnabled": true,
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "BestDeal needs access to your photos to search products by image",
+          "cameraPermission": "BestDeal needs camera access to search products by image"
+        }
+      ]
+    ]
+  }
+}
