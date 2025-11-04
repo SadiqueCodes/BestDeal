@@ -6,7 +6,6 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
-    "newArchEnabled": true,
     "scheme": "bestdeal",
     "splash": {
       "image": "./assets/splash-icon.png",
@@ -14,7 +13,6 @@
       "backgroundColor": "#0A0A0F"
     },
     "ios": {
-      "supportsTablet": true,
       "bundleIdentifier": "com.bestdeal.app",
       "infoPlist": {
         "NSCameraUsageDescription": "BestDeal needs camera access to search products by image",
@@ -31,9 +29,7 @@
         "CAMERA",
         "READ_EXTERNAL_STORAGE",
         "WRITE_EXTERNAL_STORAGE"
-      ],
-      "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"

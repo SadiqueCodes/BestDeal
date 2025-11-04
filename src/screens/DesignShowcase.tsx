@@ -19,7 +19,7 @@ export const DesignShowcase: React.FC = () => {
         </View>
 
         {/* Typography Showcase */}
-        <GlowCard variant="primary" glow glowColor="purple" style={styles.section}>
+        <GlowCard variant="primary" glow={true} glowColor="purple" style={styles.section}>
           <Text variant="h4" style={styles.sectionTitle}>
             Typography
           </Text>
@@ -69,12 +69,12 @@ export const DesignShowcase: React.FC = () => {
         </GlowCard>
 
         {/* Price Tag Showcase */}
-        <GlowCard variant="tertiary" glow glowColor="blue" style={styles.section}>
+        <GlowCard variant="tertiary" glow={true} glowColor="blue" style={styles.section}>
           <Text variant="h4" style={styles.sectionTitle}>
             Price Tags
           </Text>
           <View style={styles.priceRow}>
-            <PriceTag price={12999} originalPrice={15999} discount={18} isLowest />
+            <PriceTag price={12999} originalPrice={15999} discount={18} isLowest={true} />
           </View>
           <View style={[styles.priceRow, styles.mt]}>
             <PriceTag price={14499} size="small" />
@@ -98,7 +98,7 @@ export const DesignShowcase: React.FC = () => {
         </GlowCard>
 
         {/* Product Card Example */}
-        <GlowCard variant="primary" glow glowColor="pink" style={styles.section}>
+        <GlowCard variant="primary" glow={true} glowColor="pink" style={styles.section}>
           <Text variant="h5" style={styles.mb}>
             Nike Air Max 270
           </Text>
@@ -106,14 +106,14 @@ export const DesignShowcase: React.FC = () => {
             Men's Running Shoes
           </Text>
           <View style={styles.productInfo}>
-            <PriceTag price={9999} originalPrice={12999} discount={23} isLowest />
+            <PriceTag price={9999} originalPrice={12999} discount={23} isLowest={true} />
             <StoreBadge store="amazon" size="small" />
           </View>
           <Button
             title="View Details"
             variant="secondary"
             size="small"
-            fullWidth
+            fullWidth={true}
             style={styles.mt}
           />
         </GlowCard>

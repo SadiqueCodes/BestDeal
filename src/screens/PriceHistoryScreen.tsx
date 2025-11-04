@@ -75,7 +75,7 @@ export const PriceHistoryScreen: React.FC = () => {
         </View>
 
         {/* Current Stats */}
-        <GlowCard variant="primary" glow glowColor="purple" style={styles.statsCard}>
+        <GlowCard variant="primary" glow={true} glowColor="purple" style={styles.statsCard}>
           <View style={styles.statsGrid}>
             <View style={styles.statItem}>
               <Text variant="caption" color={colors.text.tertiary}>
@@ -127,7 +127,7 @@ export const PriceHistoryScreen: React.FC = () => {
             width={screenWidth - spacing.base * 4}
             height={220}
             chartConfig={chartConfig}
-            bezier
+            bezier={true}
             style={styles.chart}
             withDots={true}
             withInnerLines={true}

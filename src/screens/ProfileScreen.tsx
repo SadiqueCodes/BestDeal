@@ -58,8 +58,8 @@ export const ProfileScreen: React.FC = () => {
           <Text variant="h2">Profile</Text>
         </View>
 
-        {/* User Card */}
-        <GlowCard variant="primary" glow glowColor="purple" style={styles.userCard}>
+        {/* User Info Card */}
+        <GlowCard variant="primary" glow={true} glowColor="purple" style={styles.userCard}>
           <View style={styles.avatarContainer}>
             <View style={styles.avatar}>
               <Ionicons name="person" size={48} color={colors.text.primary} />

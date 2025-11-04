@@ -77,7 +77,7 @@ export const AlertsScreen: React.FC = () => {
         </View>
 
         {/* Alert Stats */}
-        <GlowCard variant="primary" glow style={styles.statsCard}>
+        <GlowCard variant="primary" glow={true} style={styles.statsCard}>
           <View style={styles.statsRow}>
             <View style={styles.statItem}>
               <Ionicons name="notifications" size={24} color={colors.accent.purple} />

@@ -54,7 +54,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
               <PriceTag
                 price={lowestPrice.currentPrice}
                 size="small"
-                isLowest
+                isLowest={true}
               />
             </View>
           </View>
@@ -65,7 +65,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
   return (
     <TouchableOpacity onPress={onPress} activeOpacity={0.9}>
-      <GlowCard variant="primary" glow style={styles.card}>
+      <GlowCard variant="primary" glow={true} style={styles.card}>
         <Image source={{ uri: product.imageUrl }} style={styles.image} />
 
         <View style={styles.content}>
@@ -86,7 +86,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
               price={lowestPrice.currentPrice}
               originalPrice={lowestPrice.originalPrice}
               discount={lowestPrice.discount}
-              isLowest
+              isLowest={true}
             />
             <StoreBadge store={lowestPrice.store} size="small" />
           </View>
@@ -105,18 +105,18 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
 const styles = StyleSheet.create({
   card: {
-    marginBottom: spacing.base,
+    marginBottom: spacing.md,
     overflow: 'hidden',
   },
   image: {
     width: '100%',
-    height: 200,
+    height: 180,
     borderRadius: borderRadius.md,
-    marginBottom: spacing.md,
+    marginBottom: spacing.sm,
     backgroundColor: colors.background.tertiary,
   },
   content: {
-    gap: spacing.md,
+    gap: spacing.sm,
   },
   header: {
     flexDirection: 'row',
@@ -157,12 +157,12 @@ const styles = StyleSheet.create({
 
   // Compact variant
   compactCard: {
-    marginRight: spacing.base,
+    marginRight: spacing.md,
     width: 280,
   },
   compactContent: {
     flexDirection: 'row',
-    gap: spacing.md,
+    gap: spacing.sm,
   },
   compactImage: {
     width: 80,

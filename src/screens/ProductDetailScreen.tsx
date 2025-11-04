@@ -44,7 +44,7 @@ export const ProductDetailScreen: React.FC = () => {
     <SafeAreaView style={styles.safeArea}>
       <ScrollView style={styles.container} contentContainerStyle={styles.content}>
         {/* Product Image */}
-        <GlowCard variant="neutral" glow glowColor="purple" style={styles.imageCard}>
+        <GlowCard variant="neutral" glow={true} glowColor="purple" style={styles.imageCard}>
           <Image source={{ uri: product.imageUrl }} style={styles.image} />
         </GlowCard>
 
@@ -57,7 +57,7 @@ export const ProductDetailScreen: React.FC = () => {
         </View>
 
         {/* Lowest Price Highlight */}
-        <GlowCard variant="primary" glow glowColor="pink" style={styles.lowestPriceCard}>
+        <GlowCard variant="primary" glow={true} glowColor="pink" style={styles.lowestPriceCard}>
           <View style={styles.lowestPriceHeader}>
             <Ionicons name="trophy" size={24} color={colors.status.lowestPrice} />
             <Text variant="h5">Best Price</Text>
@@ -68,14 +68,14 @@ export const ProductDetailScreen: React.FC = () => {
               originalPrice={lowestPrice.originalPrice}
               discount={lowestPrice.discount}
               size="large"
-              isLowest
+              isLowest={true}
             />
             <StoreBadge store={lowestPrice.store} size="large" />
           </View>
           <Button
             title="View on Store"
             variant="primary"
-            fullWidth
+            fullWidth={true}
             style={styles.viewButton}
             icon={<Ionicons name="open-outline" size={20} color={colors.text.primary} />}
           />
@@ -145,7 +145,7 @@ export const ProductDetailScreen: React.FC = () => {
         <Button
           title="Set Price Alert"
           variant="secondary"
-          fullWidth
+          fullWidth={true}
           icon={<Ionicons name="notifications-outline" size={20} color={colors.text.primary} />}
         />
 
@@ -187,7 +187,7 @@ export const ProductDetailScreen: React.FC = () => {
                   title="View Deal"
                   variant="outline"
                   size="small"
-                  fullWidth
+                  fullWidth={true}
                   style={styles.dealButton}
                   icon={<Ionicons name="open-outline" size={16} color={colors.text.primary} />}
                 />

@@ -28,9 +28,9 @@ export const HomeScreen: React.FC = () => {
       <ScrollView style={styles.container} contentContainerStyle={styles.content}>
         {/* Header */}
         <View style={styles.header}>
-          <View>
+          <View style={styles.headerText}>
             <Text variant="h2">BestDeal</Text>
-            <Text variant="body" color={colors.text.secondary}>
+            <Text variant="body" color={colors.text.secondary} style={styles.headerSubtitle}>
               Find the best prices, always
             </Text>
           </View>
@@ -44,35 +44,37 @@ export const HomeScreen: React.FC = () => {
 
         {/* Quick Actions */}
         <View style={styles.quickActions}>
-          <GlowCard variant="primary" glow glowColor="pink" style={styles.quickCard}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('Main', { screen: 'Camera' } as any)}
-            >
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Main', { screen: 'Camera' } as any)}
+            style={styles.quickCard}
+            activeOpacity={0.8}
+          >
+            <GlowCard variant="primary" glow={true} glowColor="pink" transparent={true}>
               <View style={styles.quickCardContent}>
-                <Ionicons name="camera" size={32} color={colors.accent.pink} />
-                <Text variant="h6" style={styles.quickCardTitle}>
-                  Scan Product
-                </Text>
+                <Ionicons name="camera" size={28} color={colors.accent.pink} />
+                <Text variant="h6">Scan Product</Text>
                 <Text variant="caption" color={colors.text.secondary}>
                   Take a photo to search
                 </Text>
               </View>
-            </TouchableOpacity>
-          </GlowCard>
+            </GlowCard>
+          </TouchableOpacity>
 
-          <GlowCard variant="secondary" glow glowColor="blue" style={styles.quickCard}>
-            <TouchableOpacity onPress={() => navigation.navigate('DealVerification', {})}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('DealVerification', {})}
+            style={styles.quickCard}
+            activeOpacity={0.8}
+          >
+            <GlowCard variant="secondary" glow={true} glowColor="blue" transparent={true}>
               <View style={styles.quickCardContent}>
-                <Ionicons name="shield-checkmark" size={32} color={colors.accent.blue} />
-                <Text variant="h6" style={styles.quickCardTitle}>
-                  Verify Deal
-                </Text>
+                <Ionicons name="shield-checkmark" size={28} color={colors.accent.blue} />
+                <Text variant="h6">Verify Deal</Text>
                 <Text variant="caption" color={colors.text.secondary}>
                   Check if it's genuine
                 </Text>
               </View>
-            </TouchableOpacity>
-          </GlowCard>
+            </GlowCard>
+          </TouchableOpacity>
         </View>
 
         {/* Featured Deals */}
@@ -86,7 +88,7 @@ export const HomeScreen: React.FC = () => {
           </Text>
 
           <FlatList
-            horizontal
+            horizontal={true}
             data={featuredDeals}
             renderItem={({ item }) => (
               <View style={{ width: 280 }}>
@@ -159,9 +161,15 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginBottom: spacing.xl,
-    paddingTop: spacing.md,
+    alignItems: 'center',
+    marginBottom: spacing.lg,
+    paddingTop: spacing.xs,
+  },
+  headerText: {
+    gap: 2,
+  },
+  headerSubtitle: {
+    marginTop: 2,
   },
   verifyButton: {
     padding: spacing.sm,
@@ -170,21 +178,21 @@ const styles = StyleSheet.create({
   },
   quickActions: {
     flexDirection: 'row',
-    gap: spacing.base,
+    gap: spacing.md,
     marginBottom: spacing.xl,
   },
   quickCard: {
     flex: 1,
+    minHeight: 120,
   },
   quickCardContent: {
     alignItems: 'center',
+    justifyContent: 'center',
     gap: spacing.sm,
-  },
-  quickCardTitle: {
-    marginTop: spacing.xs,
+    minHeight: 88,
   },
   section: {
-    marginBottom: spacing['2xl'],
+    marginBottom: spacing.xl,
   },
   sectionHeader: {
     flexDirection: 'row',
@@ -196,7 +204,7 @@ const styles = StyleSheet.create({
     marginBottom: spacing.md,
   },
   sectionSubtitle: {
-    marginBottom: spacing.base,
+    marginBottom: spacing.md,
   },
   horizontalList: {
     paddingRight: spacing.base,

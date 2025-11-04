@@ -46,40 +46,40 @@ export const typography = {
       fontFamily,
       fontSize: 48,
       fontWeight: '800' as const,
-      lineHeight: 1.2,
+      lineHeight: 52,
       letterSpacing: -1,
     },
     h2: {
       fontFamily,
       fontSize: 40,
       fontWeight: '800' as const,
-      lineHeight: 1.2,
+      lineHeight: 44,
       letterSpacing: -0.5,
     },
     h3: {
       fontFamily,
       fontSize: 32,
       fontWeight: '700' as const,
-      lineHeight: 1.3,
+      lineHeight: 36,
       letterSpacing: -0.5,
     },
     h4: {
       fontFamily,
       fontSize: 24,
       fontWeight: '700' as const,
-      lineHeight: 1.4,
+      lineHeight: 28,
     },
     h5: {
       fontFamily,
       fontSize: 20,
       fontWeight: '600' as const,
-      lineHeight: 1.4,
+      lineHeight: 24,
     },
     h6: {
       fontFamily,
       fontSize: 17,
       fontWeight: '600' as const,
-      lineHeight: 1.5,
+      lineHeight: 22,
     },
 
     // Body Text
@@ -87,19 +87,19 @@ export const typography = {
       fontFamily,
       fontSize: 17,
       fontWeight: '400' as const,
-      lineHeight: 1.5,
+      lineHeight: 22,
     },
     body: {
       fontFamily,
       fontSize: 15,
       fontWeight: '400' as const,
-      lineHeight: 1.5,
+      lineHeight: 20,
     },
     bodySmall: {
       fontFamily,
       fontSize: 13,
       fontWeight: '400' as const,
-      lineHeight: 1.5,
+      lineHeight: 18,
     },
 
     // Medium variants
@@ -107,19 +107,19 @@ export const typography = {
       fontFamily,
       fontSize: 17,
       fontWeight: '500' as const,
-      lineHeight: 1.5,
+      lineHeight: 22,
     },
     bodyMedium: {
       fontFamily,
       fontSize: 15,
       fontWeight: '500' as const,
-      lineHeight: 1.5,
+      lineHeight: 20,
     },
     bodySmallMedium: {
       fontFamily,
       fontSize: 13,
       fontWeight: '500' as const,
-      lineHeight: 1.5,
+      lineHeight: 18,
     },
 
     // Bold variants
@@ -127,7 +127,7 @@ export const typography = {
       fontFamily,
       fontSize: 15,
       fontWeight: '700' as const,
-      lineHeight: 1.5,
+      lineHeight: 20,
     },
 
     // Italic variants
@@ -136,14 +136,14 @@ export const typography = {
       fontSize: 15,
       fontWeight: '400' as const,
       fontStyle: 'italic' as const,
-      lineHeight: 1.5,
+      lineHeight: 20,
     },
     bodyBoldItalic: {
       fontFamily,
       fontSize: 15,
       fontWeight: '700' as const,
       fontStyle: 'italic' as const,
-      lineHeight: 1.5,
+      lineHeight: 20,
     },
 
     // Special Text
@@ -151,19 +151,19 @@ export const typography = {
       fontFamily,
       fontSize: 13,
       fontWeight: '400' as const,
-      lineHeight: 1.5,
+      lineHeight: 18,
     },
     captionMedium: {
       fontFamily,
       fontSize: 13,
       fontWeight: '500' as const,
-      lineHeight: 1.5,
+      lineHeight: 18,
     },
     overline: {
       fontFamily,
       fontSize: 11,
       fontWeight: '500' as const,
-      lineHeight: 1.5,
+      lineHeight: 14,
       textTransform: 'uppercase' as const,
       letterSpacing: 1,
     },
@@ -173,19 +173,19 @@ export const typography = {
       fontFamily,
       fontSize: 15,
       fontWeight: '600' as const,
-      lineHeight: 1.2,
+      lineHeight: 18,
     },
     buttonLarge: {
       fontFamily,
       fontSize: 17,
       fontWeight: '600' as const,
-      lineHeight: 1.2,
+      lineHeight: 20,
     },
     buttonSmall: {
       fontFamily,
       fontSize: 13,
       fontWeight: '600' as const,
-      lineHeight: 1.2,
+      lineHeight: 16,
     },
 
     // Price Text (special styling)
@@ -193,19 +193,19 @@ export const typography = {
       fontFamily,
       fontSize: 24,
       fontWeight: '800' as const,
-      lineHeight: 1.2,
+      lineHeight: 28,
     },
     priceLarge: {
       fontFamily,
       fontSize: 32,
       fontWeight: '800' as const,
-      lineHeight: 1.2,
+      lineHeight: 36,
     },
     priceSmall: {
       fontFamily,
       fontSize: 17,
       fontWeight: '700' as const,
-      lineHeight: 1.2,
+      lineHeight: 20,
     },
   },
 } as const;

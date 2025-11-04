@@ -169,7 +169,7 @@ export const DealVerificationScreen: React.FC = () => {
           <Button
             title="Verify Another Deal"
             variant="primary"
-            fullWidth
+            fullWidth={true}
             onPress={resetVerification}
           />
         </ScrollView>
@@ -192,7 +192,7 @@ export const DealVerificationScreen: React.FC = () => {
         </View>
 
         {/* How it Works */}
-        <GlowCard variant="primary" glow style={styles.howItWorksCard}>
+        <GlowCard variant="primary" glow={true} style={styles.howItWorksCard}>
           <Text variant="h6" style={styles.cardTitle}>
             How It Works
           </Text>
@@ -258,7 +258,7 @@ export const DealVerificationScreen: React.FC = () => {
         <Button
           title={verifying ? 'Verifying...' : 'Verify Deal'}
           variant="primary"
-          fullWidth
+          fullWidth={true}
           size="large"
           onPress={verifyDeal}
           disabled={url.length === 0 || verifying}

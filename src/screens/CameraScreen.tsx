@@ -39,7 +39,7 @@ export const CameraScreen: React.FC = () => {
 
     const result = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
-      aspect: [1, 1],
+      aspect: [1, 1] as [number, number],
       quality: 0.8,
     });
 
@@ -53,7 +53,7 @@ export const CameraScreen: React.FC = () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [1, 1],
+      aspect: [1, 1] as [number, number],
       quality: 0.8,
     });
 
@@ -90,13 +90,13 @@ export const CameraScreen: React.FC = () => {
             <View style={{ width: 24 }} />
           </View>
 
-          <GlowCard variant="primary" glow style={styles.imagePreview}>
+          <GlowCard variant="primary" glow={true} style={styles.imagePreview}>
             <Image source={{ uri: selectedImage }} style={styles.previewImage} />
           </GlowCard>
 
           {searching ? (
             <View style={styles.loadingContainer}>
-              <GlowCard variant="secondary" glow glowColor="purple" style={styles.loadingCard}>
+              <GlowCard variant="secondary" glow={true} glowColor="purple" style={styles.loadingCard}>
                 <Ionicons name="search" size={48} color={colors.accent.purple} />
                 <Text variant="h6" style={styles.loadingText}>
                   Searching across stores...
@@ -141,7 +141,7 @@ export const CameraScreen: React.FC = () => {
             Take a photo of any product and we'll find it across all stores with the best prices
           </Text>
 
-          <GlowCard variant="primary" glow glowColor="pink" style={styles.featureCard}>
+          <GlowCard variant="primary" glow={true} glowColor="pink" style={styles.featureCard}>
             <View style={styles.featureItem}>
               <Ionicons name="flash-outline" size={24} color={colors.accent.pink} />
               <Text variant="bodyMedium">Instant Recognition</Text>
@@ -160,7 +160,7 @@ export const CameraScreen: React.FC = () => {
             <Button
               title="Take Photo"
               variant="primary"
-              fullWidth
+              fullWidth={true}
               size="large"
               icon={<Ionicons name="camera" size={24} color={colors.text.primary} />}
               onPress={takePhoto}
@@ -169,7 +169,7 @@ export const CameraScreen: React.FC = () => {
             <Button
               title="Choose from Gallery"
               variant="secondary"
-              fullWidth
+              fullWidth={true}
               size="large"
               icon={<Ionicons name="images" size={24} color={colors.text.primary} />}
               onPress={pickImage}
