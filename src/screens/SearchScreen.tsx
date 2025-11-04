@@ -11,10 +11,11 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Ionicons } from '@expo/vector-icons';
 import { Text, GlowCard } from '../components';
+import { useEffect } from 'react';
 import { ProductCard } from '../components/ProductCard';
 import { colors, spacing, borderRadius, typography } from '../theme';
 import { RootStackParamList } from '../types';
-import { searchProducts, mockProductPrices } from '../services/mockData';
+import { search } from '../services/api';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -23,13 +24,33 @@ export const SearchScreen: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [results, setResults] = useState(mockProductPrices);
 
+  useEffect(() => {
+    let mounted = true;
+    const run = async () => {
+      if (!searchQuery.trim()) return;
+      try {
+        const res = await search(searchQuery.trim());
+        if (mounted) setResults(res);
+      } catch (e) {
+        console.warn('Search failed', e);
+      }
+    };
+
+    const t = setTimeout(() => {
+      run();
+    }, 300);
+
+    return () => {
+      mounted = false;
+      clearTimeout(t);
+    };
+  }, [searchQuery]);
+
   const handleSearch = (query: string) => {
     setSearchQuery(query);
-    if (query.trim()) {
-      const searchResults = searchProducts(query);
-      setResults(searchResults);
-    } else {
-      setResults(mockProductPrices);
+    if (!query.trim()) {
+      // reset to empty list when query cleared
+      setResults([]);
     }
   };
 

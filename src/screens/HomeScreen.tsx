@@ -14,14 +14,21 @@ import { Text, GlowCard, Button } from '../components';
 import { ProductCard } from '../components/ProductCard';
 import { colors, spacing } from '../theme';
 import { RootStackParamList } from '../types';
-import { mockProductPrices, getFeaturedDeals } from '../services/mockData';
+import { useEffect } from 'react';
+import { useAppStore } from '../store/useAppStore';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 export const HomeScreen: React.FC = () => {
   const navigation = useNavigation<NavigationProp>();
-  const featuredDeals = getFeaturedDeals();
-  const trendingProducts = mockProductPrices.slice(0, 4);
+  const { products, loadProducts, loading } = useAppStore();
+
+  useEffect(() => {
+    loadProducts();
+  }, []);
+
+  const featuredDeals = products.filter(p => p.trend && p.trend.priceChange < -5).slice(0, 5);
+  const trendingProducts = products.slice(0, 4);
 
   return (
     <SafeAreaView style={styles.safeArea}>

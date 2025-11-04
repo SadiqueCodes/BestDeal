@@ -13,7 +13,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { Text, GlowCard, Button, PriceTag, StoreBadge } from '../components';
 import { colors, spacing, borderRadius } from '../theme';
 import { RootStackParamList } from '../types';
-import { getProductById } from '../services/mockData';
+import { fetchProductById } from '../services/api';
+import { useEffect, useState } from 'react';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'ProductDetail'>;
 type RouteProps = RouteProp<RootStackParamList, 'ProductDetail'>;
@@ -23,7 +24,40 @@ export const ProductDetailScreen: React.FC = () => {
   const route = useRoute<RouteProps>();
   const { productId } = route.params;
 
-  const productData = getProductById(productId);
+  const [productData, setProductData] = useState<any | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let mounted = true;
+    const load = async () => {
+      setLoading(true);
+      try {
+        const data = await fetchProductById(productId);
+        if (mounted) setProductData(data || null);
+      } catch (e) {
+        console.warn('Failed to load product', e);
+        if (mounted) setProductData(null);
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    };
+    load();
+    return () => {
+      mounted = false;
+    };
+  }, [productId]);
+
+  if (loading) {
+    return (
+      <SafeAreaView style={styles.safeArea}>
+        <View style={styles.errorContainer}>
+          <Text variant="h5" color={colors.text.secondary}>
+            Loading...
+          </Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   if (!productData) {
     return (
@@ -38,7 +72,7 @@ export const ProductDetailScreen: React.FC = () => {
   }
 
   const { product, prices, lowestPrice, trend } = productData;
-  const sortedPrices = [...prices].sort((a, b) => a.currentPrice - b.currentPrice);
+  const sortedPrices = [...(prices || [])].sort((a: any, b: any) => a.currentPrice - b.currentPrice);
 
   return (
     <SafeAreaView style={styles.safeArea}>

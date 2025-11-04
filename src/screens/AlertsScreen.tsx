@@ -11,17 +11,52 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Ionicons } from '@expo/vector-icons';
 import { Text, GlowCard, Button } from '../components';
+import { useEffect, useState } from 'react';
 import { PriceTag } from '../components/PriceTag';
 import { StoreBadge } from '../components/StoreBadge';
 import { colors, spacing, borderRadius } from '../theme';
 import { RootStackParamList } from '../types';
-import { mockAlerts, getProductById } from '../services/mockData';
+import { fetchAlerts, fetchProductById } from '../services/api';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 export const AlertsScreen: React.FC = () => {
   const navigation = useNavigation<NavigationProp>();
-  const [alerts, setAlerts] = React.useState(mockAlerts);
+  const [alerts, setAlerts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let mounted = true;
+    const load = async () => {
+      setLoading(true);
+      try {
+        const a = await fetchAlerts();
+        if (!mounted) return;
+
+        // Optionally enrich alerts with product info
+        const enriched = await Promise.all(
+          a.map(async (alert: any) => {
+            try {
+              const p = await fetchProductById(alert.productId);
+              return { ...alert, product: p ? p.product : null };
+            } catch (e) {
+              return { ...alert, product: null };
+            }
+          })
+        );
+
+        if (mounted) setAlerts(enriched);
+      } catch (e) {
+        console.warn('Failed to load alerts', e);
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    };
+    load();
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const toggleAlert = (alertId: string) => {
     setAlerts(prev =>
@@ -34,6 +69,21 @@ export const AlertsScreen: React.FC = () => {
   const deleteAlert = (alertId: string) => {
     setAlerts(prev => prev.filter(alert => alert.id !== alertId));
   };
+
+  if (loading) {
+    return (
+      <SafeAreaView style={styles.safeArea}>
+        <View style={styles.container}>
+          <View style={styles.header}>
+            <Text variant="h3">Price Alerts</Text>
+            <Text variant="body" color={colors.text.secondary}>
+              Loading alerts...
+            </Text>
+          </View>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   if (alerts.length === 0) {
     return (
@@ -110,10 +160,8 @@ export const AlertsScreen: React.FC = () => {
           </Text>
 
           {alerts.map(alert => {
-            const productData = getProductById(alert.productId);
-            if (!productData) return null;
-
-            const { product } = productData;
+            const product = alert.product;
+            if (!product) return null;
             const isTriggered = alert.currentPrice <= alert.targetPrice;
 
             return (

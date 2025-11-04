@@ -12,21 +12,26 @@ import { Text, GlowCard, Button } from '../components';
 import { PriceTag } from '../components/PriceTag';
 import { StoreBadge } from '../components/StoreBadge';
 import { colors, spacing, borderRadius, typography } from '../theme';
-import { mockDeals } from '../services/mockData';
+import { fetchDeals } from '../services/api';
+import { useEffect } from 'react';
 
 export const DealVerificationScreen: React.FC = () => {
   const [url, setUrl] = useState('');
   const [verifying, setVerifying] = useState(false);
   const [result, setResult] = useState<typeof mockDeals[0] | null>(null);
 
-  const verifyDeal = () => {
+  const verifyDeal = async () => {
     setVerifying(true);
-    // Simulate verification
-    setTimeout(() => {
-      const randomDeal = mockDeals[Math.floor(Math.random() * mockDeals.length)];
+    try {
+      const deals = await fetchDeals();
+      // naive: pick a random deal from fetched deals to simulate analysis
+      const randomDeal = deals[Math.floor(Math.random() * deals.length)];
       setResult(randomDeal);
+    } catch (e) {
+      console.warn('Failed to verify deal', e);
+    } finally {
       setVerifying(false);
-    }, 2000);
+    }
   };
 
   const resetVerification = () => {

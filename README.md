@@ -78,6 +78,32 @@ npm run android  # Android Emulator
 npm run web      # Web Browser
 ```
 
+### Environment variables
+
+This project uses mock data by default, but when you wire up backend services (Supabase, image recognition, push notifications, etc.) you should store credentials and environment-specific values in a local `.env` file.
+
+Steps:
+
+1. Copy the example file to create a real `.env` in the repo root:
+
+```bash
+cp .env.example .env
+# then edit .env and fill real values
+```
+
+2. Never commit your `.env` file. This repository already includes a `.gitignore` entry for `.env` and common env patterns.
+
+3. Accessing env vars in an Expo app:
+
+- Public values that are safe to ship to clients should be prefixed with `EXPO_PUBLIC_` and can be injected via `app.config.js`/`app.json` or by using `expo-constants`.
+- Secret keys (database anon keys, server keys) must be used only on your backend. Do not embed secret keys directly in the mobile app.
+
+Notes:
+
+- The repo contains `.env.example` with common variables like `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `IMAGE_API_KEY`, and `API_BASE_URL`.
+- The app currently uses `src/services/mockData.ts` for demo data; no backend is required to run the UI.
+
+
 ## Project Structure
 
 ```
@@ -263,6 +289,57 @@ The app currently uses mock data for demonstration. Mock data includes:
    - Play Store submission
    - Backend deployment
    - Analytics setup
+
+   ## Production checklist (quick)
+
+   If you want to move this app from mock/demo to production-ready, here's a focused checklist to follow:
+
+   1. Backend
+      - Set up a backend API (Supabase or custom) to store products, price history, alerts, and users.
+      - Move scraping / price-collection to server-side services and expose secure endpoints.
+      - Keep secret keys on the server; only expose public values to the app with `EXPO_PUBLIC_` prefix.
+
+   2. Environment & configuration
+      - Populate `.env` from `.env.example` and add real values.
+      - Use `app.config.js` (included) to inject env values into `expo` via `extra`.
+
+   3. Client wiring
+      - Use `src/services/api.ts` (included) as a bridge: it will call your API when `API_BASE_URL` is set, otherwise falls back to mock data.
+      - Implement authentication (token storage + refresh) if you add user accounts.
+      - Add push notification handling (Expo or FCM/APNs) on both client and server.
+
+   4. Safety & quality
+      - Add TypeScript `tsc --noEmit` to CI (configured) and add tests (Jest + @testing-library/react-native).
+      - Add linting (ESLint) and formatting (Prettier) with pre-commit hooks.
+      - Audit production dependencies and configure release channels.
+
+   5. Monitoring
+      - Add Sentry or similar for crash reporting.
+      - Add analytics tracking for key flows (search, product view, alerts created).
+
+   6. UI polish
+      - Run accessibility checks and ensure tappable areas meet minimum size.
+      - Validate dark/light theme behavior across devices.
+
+      ## Supabase setup
+
+      If you plan to use Supabase as the production backend, here are quick steps and a schema to get you started.
+
+      1. Create a Supabase project at https://app.supabase.com and note the Project URL and anon/public key.
+      2. Add the keys to your local `.env`:
+
+      ```bash
+      SUPABASE_URL=https://your-project.supabase.co
+      SUPABASE_ANON_KEY=your-anon-key
+      ```
+
+      3. Run the schema in `supabase/schema.sql` from the Supabase SQL editor to create `products`, `alerts`, and `deals` tables.
+      4. Seed the `products` table with product rows; the app expects JSON in the `product` column matching the `Product` type and optional `prices`/`trend` JSON matching the types in `src/types/index.ts`.
+      5. Start the app (`npm start`) and the app will use Supabase automatically when `SUPABASE_URL` is present in `app.config.js` / `.env`.
+
+      If you want, I can prepare a small seed script that inserts the current mock data into Supabase using the anon key — you'll need to run it locally once and it will populate the `products`, `alerts`, and `deals` tables.
+
+   If you'd like, I can start wiring one backend endpoint (local mock server or a simple JSON server) and switch the app to use it so we can test end-to-end.
 
 ## License
 

@@ -6,7 +6,18 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "typecheck": "tsc --noEmit",
+    "ci": "npm run typecheck"
+  },
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "typecheck": "tsc --noEmit",
+    "ci": "npm run typecheck",
+    "mock-server": "node scripts/mock-server.js"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
@@ -26,10 +37,15 @@
     "react-native-safe-area-context": "^5.6.1",
     "react-native-screens": "^4.17.1",
     "react-native-svg": "^15.14.0",
-    "zustand": "^5.0.8"
+    "zustand": "^5.0.8",
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "@supabase/supabase-js": "^2.34.0"
   },
   "devDependencies": {
     "@types/react": "~19.1.0",
+    "@types/node": "^20.0.0",
+    "@types/express": "^4.17.21",
     "babel-preset-expo": "^54.0.6",
     "typescript": "~5.9.2"
   },

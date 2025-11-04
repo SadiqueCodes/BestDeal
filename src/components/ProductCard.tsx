@@ -43,10 +43,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
   if (variant === 'compact') {
     return (
-      <TouchableOpacity onPress={onPress} activeOpacity={0.9}>
+      <TouchableOpacity onPress={onPress} activeOpacity={0.9} accessible accessibilityRole="button" accessibilityLabel={`Open ${product.name}`}>
         <GlowCard variant="primary" style={styles.compactCard}>
           <View style={styles.compactContent}>
-            <Image source={{ uri: product.imageUrl }} style={styles.compactImage} />
+            <Image source={{ uri: product.imageUrl }} style={styles.compactImage} accessibilityLabel={product.name} />
             <View style={styles.compactInfo}>
               <Text variant="bodyMedium" numberOfLines={2} style={styles.mb}>
                 {product.name}
@@ -64,9 +64,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   }
 
   return (
-    <TouchableOpacity onPress={onPress} activeOpacity={0.9}>
+    <TouchableOpacity onPress={onPress} activeOpacity={0.9} accessible accessibilityRole="button" accessibilityLabel={`Open ${product.name}`}>
       <GlowCard variant="primary" glow style={styles.card}>
-        <Image source={{ uri: product.imageUrl }} style={styles.image} />
+        <Image source={{ uri: product.imageUrl }} style={styles.image} accessibilityLabel={product.name} />
 
         <View style={styles.content}>
           <View style={styles.header}>
