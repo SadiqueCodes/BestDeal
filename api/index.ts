@@ -1,6 +1,8 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
 import { createClient } from '@supabase/supabase-js';
+import axios from 'axios';
+import * as cheerio from 'cheerio';
 
 const app = express();
 
@@ -12,6 +14,86 @@ app.use(express.json());
 const supabaseUrl = process.env.SUPABASE_URL || '';
 const supabaseKey = process.env.SUPABASE_SERVICE_KEY || '';
 const supabase = createClient(supabaseUrl, supabaseKey);
+
+// Amazon scraper
+async function searchAmazon(query: string) {
+  try {
+    const searchUrl = `https://www.amazon.in/s?k=${encodeURIComponent(query)}`;
+    const { data } = await axios.get(searchUrl, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+        'Accept-Language': 'en-US,en;q=0.5',
+      },
+    });
+
+    const $ = cheerio.load(data);
+    const products: any[] = [];
+
+    $('[data-component-type="s-search-result"]').slice(0, 10).each((_, element) => {
+      const $el = $(element);
+      const name = $el.find('h2 a span').first().text().trim();
+      const priceWhole = $el.find('.a-price-whole').first().text().replace(/,/g, '');
+      const image = $el.find('img.s-image').attr('src');
+      const asin = $el.attr('data-asin');
+
+      if (name && priceWhole) {
+        const price = parseFloat(priceWhole);
+        products.push({
+          name,
+          price,
+          imageUrl: image || '',
+          store: 'amazon',
+          url: `https://www.amazon.in/dp/${asin}`,
+        });
+      }
+    });
+
+    return products;
+  } catch (error) {
+    console.error('Amazon scraping error:', error);
+    return [];
+  }
+}
+
+// Flipkart scraper
+async function searchFlipkart(query: string) {
+  try {
+    const searchUrl = `https://www.flipkart.com/search?q=${encodeURIComponent(query)}`;
+    const { data } = await axios.get(searchUrl, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+      },
+    });
+
+    const $ = cheerio.load(data);
+    const products: any[] = [];
+
+    $('[data-id]').slice(0, 10).each((_, element) => {
+      const $el = $(element);
+      const name = $el.find('a.s1Q9rs, a.IRpwTa, div.KzDlHZ').first().text().trim();
+      const priceText = $el.find('div._30jeq3, div._1_WHN1').first().text().replace(/[₹,]/g, '');
+      const image = $el.find('img').attr('src');
+
+      if (name && priceText) {
+        const price = parseFloat(priceText);
+        products.push({
+          name,
+          price,
+          imageUrl: image || '',
+          store: 'flipkart',
+          url: searchUrl,
+        });
+      }
+    });
+
+    return products;
+  } catch (error) {
+    console.error('Flipkart scraping error:', error);
+    return [];
+  }
+}
 
 // Root route
 app.get('/', (req: Request, res: Response) => {
@@ -33,7 +115,7 @@ app.get('/health', (req: Request, res: Response) => {
   res.json({ status: 'ok', message: 'BestDeal API is running' });
 });
 
-// Search products (simplified version)
+// Search products - scrapes real data from Amazon and Flipkart
 app.get('/api/search', async (req: Request, res: Response) => {
   try {
     const { q: query } = req.query;
@@ -42,18 +124,77 @@ app.get('/api/search', async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'Query parameter required' });
     }
 
-    // Search database for existing products
-    const { data: dbProducts, error } = await supabase
-      .from('products')
-      .select('*')
-      .or(`name.ilike.%${query}%,brand.ilike.%${query}%`)
-      .limit(10);
+    console.log(`🔍 Searching for: ${query}`);
 
-    if (error) throw error;
+    // Scrape from both sites in parallel
+    const [amazonProducts, flipkartProducts] = await Promise.all([
+      searchAmazon(query),
+      searchFlipkart(query),
+    ]);
+
+    console.log(`✅ Found ${amazonProducts.length} from Amazon, ${flipkartProducts.length} from Flipkart`);
+
+    // Combine results and group by product name
+    const allProducts = [...amazonProducts, ...flipkartProducts];
+    
+    // Group products by similar names
+    const productMap = new Map();
+    
+    for (const product of allProducts) {
+      const key = product.name.toLowerCase().substring(0, 50);
+      
+      if (!productMap.has(key)) {
+        // Save product to database
+        const { data: dbProduct, error: productError } = await supabase
+          .from('products')
+          .upsert([{
+            name: product.name,
+            image_url: product.imageUrl,
+            category: 'Electronics', // You can improve this with categorization
+          }], { 
+            onConflict: 'name',
+            ignoreDuplicates: false 
+          })
+          .select()
+          .single();
+
+        if (!productError && dbProduct) {
+          // Save price
+          await supabase
+            .from('prices')
+            .insert([{
+              product_id: dbProduct.id,
+              store_id: product.store,
+              current_price: product.price,
+              in_stock: true,
+            }]);
+
+          productMap.set(key, {
+            product: dbProduct,
+            prices: [{ 
+              store_id: product.store, 
+              current_price: product.price,
+              url: product.url 
+            }],
+          });
+        }
+      } else {
+        // Add price to existing product
+        const existing = productMap.get(key);
+        existing.prices.push({ 
+          store_id: product.store, 
+          current_price: product.price,
+          url: product.url 
+        });
+      }
+    }
+
+    const results = Array.from(productMap.values());
 
     res.json({ 
-      results: dbProducts || [],
-      source: 'database'
+      results,
+      source: 'scraped',
+      count: results.length,
     });
   } catch (error: any) {
     console.error('Search error:', error);

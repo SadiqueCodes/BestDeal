@@ -65,17 +65,34 @@ export const SearchScreen: React.FC = () => {
     if (query.trim()) {
       setLoading(true);
       try {
-        const searchResults = await searchProducts(query);
-        // Convert to ProductWithPrices format
-        const productsWithPrices = searchResults.map(product => ({
-          product,
-          prices: [],
-          lowestPrice: null as any,
-          trend: undefined,
-        }));
-        setResults(productsWithPrices);
+        // Call the backend API to scrape real products
+        const apiUrl = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000';
+        const response = await fetch(`${apiUrl}/api/search?q=${encodeURIComponent(query)}`);
+        const data = await response.json();
+        
+        console.log('API Response:', data);
+        
+        if (data.results) {
+          setResults(data.results);
+        } else {
+          setResults([]);
+        }
       } catch (error) {
         console.error('Search error:', error);
+        // Fallback to database search if API fails
+        try {
+          const searchResults = await searchProducts(query);
+          const productsWithPrices = searchResults.map(product => ({
+            product,
+            prices: [],
+            lowestPrice: null as any,
+            trend: undefined,
+          }));
+          setResults(productsWithPrices);
+        } catch (dbError) {
+          console.error('Database search error:', dbError);
+          setResults([]);
+        }
       } finally {
         setLoading(false);
       }

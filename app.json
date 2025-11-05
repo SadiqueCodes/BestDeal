@@ -26,9 +26,10 @@
       },
       "package": "com.bestdeal.app",
       "permissions": [
-        "CAMERA",
-        "READ_EXTERNAL_STORAGE",
-        "WRITE_EXTERNAL_STORAGE"
+        "android.permission.CAMERA",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.RECORD_AUDIO"
       ]
     },
     "web": {
@@ -42,6 +43,12 @@
           "cameraPermission": "BestDeal needs camera access to search products by image"
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "152c1c29-ec3d-47dd-b6e3-affafbd55f16"
+      }
+    },
+    "owner": "sadique362"
   }
 }
