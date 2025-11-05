@@ -13,6 +13,21 @@ const supabaseUrl = process.env.SUPABASE_URL || '';
 const supabaseKey = process.env.SUPABASE_SERVICE_KEY || '';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+// Root route
+app.get('/', (req: Request, res: Response) => {
+  res.json({ 
+    status: 'ok', 
+    message: 'BestDeal API',
+    version: '1.0.0',
+    endpoints: {
+      health: '/health',
+      search: '/api/search?q=product_name',
+      prices: '/api/product/:productId/prices',
+      history: '/api/product/:productId/history'
+    }
+  });
+});
+
 // Health check
 app.get('/health', (req: Request, res: Response) => {
   res.json({ status: 'ok', message: 'BestDeal API is running' });
