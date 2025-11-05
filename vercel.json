@@ -1,24 +1,15 @@
 {
   "version": 2,
-  "buildCommand": "cd backend && npm install && npm run build",
-  "installCommand": "npm install --prefix backend",
   "builds": [
     {
-      "src": "backend/dist/server.js",
+      "src": "api/index.ts",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
-      "src": "/api/(.*)",
-      "dest": "backend/dist/server.js"
-    },
-    {
-      "src": "/health",
-      "dest": "backend/dist/server.js"
+      "src": "/(.*)",
+      "dest": "api/index.ts"
     }
-  ],
-  "env": {
-    "NODE_ENV": "production"
-  }
+  ]
 }
