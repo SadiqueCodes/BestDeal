@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   StyleSheet,
@@ -6,6 +6,7 @@ import {
   TextInput,
   FlatList,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -14,22 +15,72 @@ import { Text, GlowCard } from '../components';
 import { ProductCard } from '../components/ProductCard';
 import { colors, spacing, borderRadius, typography } from '../theme';
 import { RootStackParamList } from '../types';
-import { searchProducts, mockProductPrices } from '../services/mockData';
+import { searchProducts, getProducts } from '../services/database';
+import { checkAPIHealth } from '../services/api';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 export const SearchScreen: React.FC = () => {
   const navigation = useNavigation<NavigationProp>();
   const [searchQuery, setSearchQuery] = useState('');
-  const [results, setResults] = useState(mockProductPrices);
+  const [results, setResults] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [apiAvailable, setApiAvailable] = useState(true);
 
-  const handleSearch = (query: string) => {
+  // Load initial products
+  useEffect(() => {
+    loadInitialProducts();
+    checkAPI();
+  }, []);
+
+  const checkAPI = async () => {
+    const healthy = await checkAPIHealth();
+    setApiAvailable(healthy);
+    if (!healthy) {
+      console.warn('Backend API is not available. Using database only.');
+    }
+  };
+
+  const loadInitialProducts = async () => {
+    try {
+      setLoading(true);
+      const products = await getProducts(10);
+      // Convert to ProductWithPrices format with empty prices for now
+      const productsWithPrices = products.map(product => ({
+        product,
+        prices: [],
+        lowestPrice: null as any,
+        trend: undefined,
+      }));
+      setResults(productsWithPrices);
+    } catch (error) {
+      console.error('Error loading products:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSearch = async (query: string) => {
     setSearchQuery(query);
     if (query.trim()) {
-      const searchResults = searchProducts(query);
-      setResults(searchResults);
+      setLoading(true);
+      try {
+        const searchResults = await searchProducts(query);
+        // Convert to ProductWithPrices format
+        const productsWithPrices = searchResults.map(product => ({
+          product,
+          prices: [],
+          lowestPrice: null as any,
+          trend: undefined,
+        }));
+        setResults(productsWithPrices);
+      } catch (error) {
+        console.error('Search error:', error);
+      } finally {
+        setLoading(false);
+      }
     } else {
-      setResults(mockProductPrices);
+      loadInitialProducts();
     }
   };
 

@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../theme';
 import { RootStackParamList, MainTabParamList } from '../types';
+import { useAuth } from '../contexts/AuthContext';
+import { registerForPushNotifications, savePushToken, setupNotificationListeners } from '../services/notifications';
 
 // Import screens
 import { HomeScreen } from '../screens/HomeScreen';
@@ -15,6 +17,8 @@ import { ProfileScreen } from '../screens/ProfileScreen';
 import { ProductDetailScreen } from '../screens/ProductDetailScreen';
 import { PriceHistoryScreen } from '../screens/PriceHistoryScreen';
 import { DealVerificationScreen } from '../screens/DealVerificationScreen';
+import { LoginScreen } from '../screens/LoginScreen';
+import { LoadingScreen } from '../screens/LoadingScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator<MainTabParamList>();
@@ -90,6 +94,51 @@ const MainTabs = () => {
 };
 
 export const AppNavigator = () => {
+  const { user, loading } = useAuth();
+
+  // Setup push notifications when user logs in
+  useEffect(() => {
+    if (user) {
+      registerForPushNotifications().then(token => {
+        if (token) {
+          savePushToken(user.id, token);
+        }
+      });
+
+      // Setup notification listeners
+      const cleanup = setupNotificationListeners(
+        (notification) => {
+          console.log('Notification received:', notification);
+        },
+        (response) => {
+          console.log('Notification tapped:', response);
+          // Navigate to product detail if productId is in notification data
+          if (response.notification.request.content.data?.productId) {
+            // Navigation logic here
+          }
+        }
+      );
+
+      return cleanup;
+    }
+  }, [user]);
+
+  if (loading) {
+    return (
+      <NavigationContainer>
+        <LoadingScreen />
+      </NavigationContainer>
+    );
+  }
+
+  if (!user) {
+    return (
+      <NavigationContainer>
+        <LoginScreen />
+      </NavigationContainer>
+    );
+  }
+
   return (
     <NavigationContainer>
       <Stack.Navigator
