@@ -84,9 +84,8 @@ git push origin main
 3. Import your GitHub repository
 4. Configure:
    - **Framework Preset**: Other
-   - **Root Directory**: `./`
-   - **Build Command**: `cd backend && npm install && npm run build`
-   - **Output Directory**: `backend/dist`
+   - **Root Directory**: `./` (leave as root)
+   - The `vercel.json` will handle the backend build automatically
 
 5. Add **Environment Variables**:
    - `SUPABASE_URL`: Your Supabase project URL
